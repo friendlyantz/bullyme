@@ -1,2 +1,39 @@
 <h1>Welcome to Bullyme!</h1>
 <p class="lead">A place where new year resolutions are not getting snoozed.<br> You get an excellent chance to bully me if I get slack! Go hard!!!</p>
+<% period = 7 %>
+<ol class="list-group">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Habit</th>
+        <% period.times do |i|%>
+          <th scope="col"><%= Date.today - i %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% @habits.each_with_index do |habit, index| %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= habit.name %></td>
+          <% period.times do |i|%>
+            <th scope="col">
+              <%if Day.find_by(day: Date.today - i).tickers.where(habit: habit).empty? %>
+                <%= link_to habit_tickers_path(habit, day_id: Day.find_by(day: Date.today - i).id), method: :post do %>
+                  <button type="button" class="btn btn-danger">x</button>
+                <% end %>
+              <% else %>
+                <%= link_to ticker_path(habit.tickers.find_by(day: Day.find_by(day: Date.today - i))), method: :delete do %>
+                  <button type="button" class="btn btn-primary">ok</button>
+                <% end %>
+              <% end %>
+            </th>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+</ol>

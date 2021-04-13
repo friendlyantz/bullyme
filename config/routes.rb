@@ -10,8 +10,11 @@ authenticate :user, lambda { |u| u.admin? } do
   end
 end
 
-  resources :habits, only: [:index]
-
+  resources :habits, only: [:index, :show] do
+    resources :tickers, only: [:create]
+  end
+  resources :tickers, only: [:destroy]
+  
   resources :notifications, only: [:index]
   resources :announcements, only: [:index]
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
